@@ -174,6 +174,18 @@ def get_nearby_places(site_object):
 
 # Additional Methods for caching 
 def load_cache():
+    ''' Opens the cache file if it exists and loads the JSON into
+    the CACHE_DICT dictionary.
+    if the cache file doesn't exist, creates a new cache dictionary
+    
+    Parameters
+    ----------
+    None
+    
+    Returns
+    -------
+    The opened cache: dict
+    '''
     try:
         cache_file = open(CACHE_FILE_NAME, 'r')
         cache_file_contents = cache_file.read()
@@ -184,12 +196,45 @@ def load_cache():
     return cache
 
 def save_cache(cache):
+    '''Check the cache for a saved result for this baseurl+params:values
+    combo. If the result is found, return it. Otherwise send a new 
+    request, save it, then return it.
+    
+    Parameters
+    ----------
+    cache:
+        the opened dict
+    
+    Returns
+    -------
+    dict
+        the results of the query as a dictionary loaded from cache
+        JSON
+    '''
+
     cache_file = open(CACHE_FILE_NAME, 'w')
     contents_to_write = json.dumps(cache)
     cache_file.write(contents_to_write)
     cache_file.close()
 
 def make_url_request_using_cache(url, cache):
+    '''Check the cache for a saved result for this baseurl+params:values
+    combo. If the result is found, return it. Otherwise send a new 
+    request, save it, then return it..
+    
+    Parameters
+    ----------
+    baseurl: string
+        The URL for the API endpoint
+    cache:
+        cache file 
+    
+    Returns
+    -------
+    dict
+        the results of the query as a dictionary loaded from cache
+        JSON
+    '''
     if (url in cache.keys()):
         print("Using cache")
         return cache[url]
